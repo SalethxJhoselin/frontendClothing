@@ -6,7 +6,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Verdana, cursive, Tahoma, sans-serif;
+  font-family:  cursive, Tahoma, sans-serif;
 }
 
 body {
@@ -15,7 +15,7 @@ body {
   overflow-x: hidden;
   height: 100%;
   background: rgb(228, 228, 228);
-  border-color: #3b3b3b;
+  border-color: #3B414D;
 }
 
 .screen-max-width {

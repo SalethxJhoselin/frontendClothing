@@ -4,6 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        pink: "#F8D6D9",
+        coral: "#E39FA9",
+        teal: "#AFCADC",
+        blue: "#2A5B7F",
         green: {
           DEFAULT: '#90CA4B',
           100: "#32A932"
@@ -20,11 +24,6 @@ export default {
           100: "#FFFFFFA6"
         },
         red: "#FF5BF7",
-        blue: {
-          DEFAULT: "#348FE2",
-          100: "#49B6D6",
-          200: "#00ACAC"
-        },
         orange: "#F59C1A",
         yellow: "#FFD900",
         purple: "#8753DE"

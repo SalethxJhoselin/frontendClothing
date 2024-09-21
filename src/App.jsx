@@ -3,14 +3,14 @@ import { BrowserRouter } from 'react-router-dom';
 import Navbar from './components/Layout/Navbar';
 import MyRoutes from './routes/Routes'; //modifique esto a Routes de routes
 import Sidebar from './components/Layout/Sidebar';
-import { AuthProvider,useAuth } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 
 const AppContent = () => {
   const { isLoggedIn, sidebarOpen, setSidebarOpen } = useAuth();
 
   return (
-    <div className="flex h-screen bg-white-100 transition-all duration-300">
+    <div className="flex h-screen bg-white transition-all duration-300">
       {isLoggedIn && (
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       )}
