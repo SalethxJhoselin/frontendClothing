@@ -1,10 +1,19 @@
 import {AimOutlined, SolutionOutlined, SettingOutlined, FileAddOutlined, TeamOutlined } from '@ant-design/icons';
+import { FaBox } from 'react-icons/fa';
 
 const SidebarLinks = () => [
   {
     label: "Administrador",
-    icon: <AimOutlined />,
+    icon: <FaBox />,
     subMenu: [
+      {
+        label: "Gestionar Roles",
+        to: "/admin/roles",
+      },
+      {
+        label: "Gestionar Roles",
+        to: "/admin/roles",
+      },
       {
         label: "Gestionar Roles",
         to: "/admin/roles",
