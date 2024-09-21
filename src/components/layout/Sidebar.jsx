@@ -3,7 +3,6 @@ import { Layout, Menu } from 'antd';
 import { LeftOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import CurrentUser from '../users/CurrentUser';
 import SidebarLinks from './SidebarLinks';
 
 const { Sider } = Layout;
@@ -34,7 +33,6 @@ const Sidebar = () => {
       <div className="flex flex-col justify-between h-full">
         <div>
           <div className="flex flex-col items-center justify-center space-y-2 mt-8">
-            <CurrentUser />
             {sidebarOpen && <h2 className="text-gray-700">Administrador</h2>}
           </div>
           <div

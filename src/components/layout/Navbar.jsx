@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa'; // Ajusta el ícono a tu preferencia
-import CurrentUser from '../users/CurrentUser';
 import assets from '../../utils';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +16,7 @@ const Navbar = () => {
 
     return (
         <header className="fixed top-0 left-0 right-0 bg-transparent w-full py-3 sm:px-10 px-5 flex justify-between items-center">
-            <Link to="/catalog"><img src={assets.logo} alt="Store" width={70} className="cursor-pointer" /></Link>
+            <Link to="/catalog"><img src={assets.logo} alt="Store" width={60} className="cursor-pointer" /></Link>
             <form onSubmit={handleSearch} className="flex flex-1 justify-center mx-4">
                 <input
                     type="text"
@@ -45,7 +44,6 @@ const Navbar = () => {
                         <button onClick={logout} className="flex items-center px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
                             Cerrar sesión
                         </button>
-                        <CurrentUser />
                     </>
                 )}
             </div>
