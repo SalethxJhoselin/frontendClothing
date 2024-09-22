@@ -8,6 +8,7 @@ export default {
         coral: "#E39FA9",
         teal: "#AFCADC",
         blue: "#2A5B7F",
+        
         green: {
           DEFAULT: '#90CA4B',
           100: "#32A932"

@@ -1,106 +1,88 @@
-import {AimOutlined, SolutionOutlined, SettingOutlined, FileAddOutlined, TeamOutlined } from '@ant-design/icons';
+import { AimOutlined, SolutionOutlined, SettingOutlined, FileAddOutlined, TeamOutlined } from '@ant-design/icons';
 import { FaBox } from 'react-icons/fa';
 
 const SidebarLinks = () => [
   {
-    label: "Administrador",
-    icon: <FaBox />,
-    subMenu: [
-      {
-        label: "Gestionar Roles",
-        to: "/admin/roles",
-      },
-      {
-        label: "Gestionar Roles",
-        to: "/admin/roles",
-      },
-      {
-        label: "Gestionar Roles",
-        to: "/admin/roles",
-      },
-      {
-        label: "Gestionar Permisos",
-        to: "/admin/permissions",
-      },
-      {
-        label: "Administrar Usuarios",
-        to: "/admin/users", 
-      },
-      {
-        label: "Administrar Accesos (Bitácora)",
-        to: "/admin/access-log", 
-      }
-    ],
-  },
-  {
-    label: "Registros",
-    icon: <FileAddOutlined />,
-    subMenu: [
-      {
-        label: "Tipos de Atenciones",
-        to: "/admin/service-types", 
-      },
-      {
-        label: "Departamentos",
-        to: "/admin/departments",
-      },
-      {
-        label: "Especialidades",
-        to: "/admin/specialties", 
-      },
-      {
-        label: "Servicios",
-        to: "/admin/services", 
-      }
-    ],
-  },
-  {
-    label: "Personal",
+    label: "Usuarios",
     icon: <TeamOutlined />,
     subMenu: [
       {
-        label: "Administrar Empleados",
+        label: "Administrar Perfil",
         to: "/personnel/manageEmployees",
       },
       {
-        label: "Registro de Profesiones",
+        label: "Administrar roles",
         to: "/personnel/professions-registry",
       },
       {
-        label: "Registro de Profesionales de la Salud",
+        label: "Administrar permisos",
+        to: "/personnel/healthcare-professionals-registry",
+      },
+      {
+        label: "Administrar usuarios",
         to: "/personnel/healthcare-professionals-registry",
       }
     ],
   },
   {
-    label: "Configuración",
-    icon: <SettingOutlined />,
+    label: "Productos",
+    icon: <FaBox />,
     subMenu: [
       {
-        label: "Programación de Médicos",
-        to: "/settings/doctor-scheduling",
+        label: "Gestionar Categoria",
+        to: "/categoria",
+      },
+      {
+        label: "Gestionar Descuentos",
+        to: "/descuento",
+      },
+      {
+        label: "Gestionar Color",
+        to: "/color",
+      },
+      {
+        label: "Gestionar Talla",
+        to: "/talla",
+      },
+      {
+        label: "Gestionar Marca",
+        to: "/marca",
+      },
+      {
+        label: "Gestionar Producto",
+        to: "/producto",
       }
     ],
   },
   {
-    label: "Atenciones Médicas",
-    icon: <SolutionOutlined />,
+    label: "Inventario",
+    icon: <SettingOutlined />,
     subMenu: [
       {
-        label: "Registro de Pacientes",
-        to: "/medical-care/patient-registry",
+        label: "Notas de ingreso",
+        to: "/notaIngreso",
       },
       {
-        label: "Citas",
-        to: "/medical-care/appointments",
+        label: "Notas de egreso",
+        to: "/notaEgreso",
       },
       {
-        label: "Consultas Médicas",
-        to: "/medical-care/consultations",
+        label: "Gestionar Inventario",
+        to: "/sinventario",
+      }
+    ],
+  },
+  {
+    label: "Ventas",
+    icon: <AimOutlined />,
+    subMenu: [
+      {
+        label: "Nota de venta",
+        to: "/notaVenta",
       },
       {
-        label: "Triaje",
-        to: "/medical-care/triage",
+        label: "Tipo de pago",
+        to: "/tipoPago",
       }
     ],
   }
