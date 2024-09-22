@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import InputModal from './InputModal';
 import api from '../../../api/apiServices';
 
-const ManageBrand = () => {
+const ManageCategory = () => {
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [editDescripcion, setEditDescripcion] = useState('');
 
     const getDatos = async () => {
         try {
-            const response = await api.get("/brand");
+            const response = await api.get("/category");
             console.log("response.data");
             console.log(response.data);
             setData(response.data);
@@ -25,7 +25,7 @@ const ManageBrand = () => {
     const handleNameSubmit = async (name) => {
         if (name.nombre && name.nombre.trim() !== "") {
             try {
-                const response = await api.post("/brand",{nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
+                const response = await api.post("/category", {nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
                 console.log("Se creó");
                 console.log(response);
                 getDatos(); // Refrescar la lista de descuentos
@@ -44,7 +44,7 @@ const ManageBrand = () => {
 
     const handleSave = async (id) => {
         try {
-            const response = await api.put(`/brand`, {
+            const response = await api.put(`/category`, {
                 id: id,
                 nombre: editDescripcion
             });
@@ -58,7 +58,7 @@ const ManageBrand = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await api.delete(`/brand/${id}`);
+            const response = await api.delete(`/category/${id}`);
             getDatos();
             setEditId(null);
             console.log('Eliminacion exitosa', response);
@@ -69,7 +69,7 @@ const ManageBrand = () => {
 
     return (
         <div className="table-container">
-            <InputModal initialValue="brand" onSubmit={handleNameSubmit} />
+            <InputModal initialValue="category" onSubmit={handleNameSubmit} />
             <table className="discount-table">
                 <thead>
                     <tr>
@@ -113,4 +113,4 @@ const ManageBrand = () => {
     );
 };
 
-export default ManageBrand;
+export default ManageCategory;

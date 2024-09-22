@@ -9,6 +9,10 @@ import Login from '../components/users/Login';
 import Register from '../components/users/Register';
 import Catalog from '../components/pages/Catalog';
 import ManageDiscount from '../components/views/Productos/ManageDiscount';
+import ManageSize from '../components/views/Productos/ManageSize';
+import ManageColor from '../components/views/Productos/ManageColor';
+import ManageBrand from '../components/views/Productos/ManageBrand';
+import ManageCategory from '../components/views/Productos/ManageCategory';
 
 const MyRoutes = () => {
     const { isLoggedIn } = useAuth();
@@ -32,6 +36,10 @@ const MyRoutes = () => {
             {/*Protected Routes */}
             <Route element={<ProtectedRoute />}>
                 <Route path="/descuento" element={<ManageDiscount />} />
+                <Route path="/talla" element={<ManageSize />} />
+                <Route path="/color" element={<ManageColor />} />
+                <Route path="/marca" element={<ManageBrand />} />
+                <Route path="/categoria" element={<ManageCategory />} />
 
 
 

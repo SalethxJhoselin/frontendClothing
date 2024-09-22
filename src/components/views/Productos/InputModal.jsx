@@ -8,8 +8,9 @@ const InputModal = ({ initialValue, onSubmit }) => {
     const [inputValue, setInputValue] = useState('');
 
     const showModal = () => {
-        setIsModalOpen(true);
         setExtraInputValue('');
+        setInputValue('');
+        setIsModalOpen(true);
         if (initialValue === "descuento") {
             setShowExtraInput(true);
         }

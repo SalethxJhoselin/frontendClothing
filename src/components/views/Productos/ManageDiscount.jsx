@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InputModal from './InputModal';
 import api from '../../../api/apiServices';
 
-const DiscountTable = () => {
+const ManageDiscount = () => {
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [editDescripcion, setEditDescripcion] = useState('');
@@ -40,8 +40,8 @@ const DiscountTable = () => {
 
     const handleEdit = (item) => {
         setEditId(item.id);  // Establece el ID del elemento que está siendo editado
-        setEditDescripcion(item.descripcion);
-        setEditPorcentaje(item.porcentaje.replace('%', ''));
+        setEditDescripcion(item.nombre);
+        setEditPorcentaje(item.porcentaje);
     };
 
     const handleSave = async (id) => {
@@ -128,4 +128,4 @@ const DiscountTable = () => {
     );
 };
 
-export default DiscountTable;
+export default ManageDiscount;
