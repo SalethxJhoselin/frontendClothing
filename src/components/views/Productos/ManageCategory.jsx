@@ -25,7 +25,7 @@ const ManageCategory = () => {
     const handleNameSubmit = async (name) => {
         if (name.nombre && name.nombre.trim() !== "") {
             try {
-                const response = await api.post("/category", {nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
+                const response = await api.post("/category", { nombre: name.nombre }); // Enviar el nombre en el cuerpo del POST
                 console.log("Se creó");
                 console.log(response);
                 getDatos(); // Refrescar la lista de descuentos
@@ -69,12 +69,13 @@ const ManageCategory = () => {
 
     return (
         <div className="table-container">
+            <h2 className="text-3xl text-center mb-3">Gestionar Categorias</h2>
             <InputModal initialValue="category" onSubmit={handleNameSubmit} />
             <table className="discount-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Talla</th>
+                        <th>Categoria</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -96,7 +97,7 @@ const ManageCategory = () => {
                             <td>
                                 {editId === item.id ? (
                                     <>
-                                    <button onClick={() => handleSave(item.id)}>Guardar</button>
+                                        <button onClick={() => handleSave(item.id)}>Guardar</button>
                                     </>
                                 ) : (
                                     <>

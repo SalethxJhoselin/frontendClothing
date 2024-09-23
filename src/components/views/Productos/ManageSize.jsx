@@ -69,6 +69,7 @@ const ManageSize = () => {
 
     return (
         <div className="table-container">
+                <h2 className="text-3xl text-center mb-3">Gestionar Tallas</h2>
             <InputModal initialValue="size" onSubmit={handleNameSubmit} />
             <table className="discount-table">
                 <thead>

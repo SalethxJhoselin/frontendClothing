@@ -25,7 +25,7 @@ const ManageBrand = () => {
     const handleNameSubmit = async (name) => {
         if (name.nombre && name.nombre.trim() !== "") {
             try {
-                const response = await api.post("/brand",{nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
+                const response = await api.post("/brand", { nombre: name.nombre }); // Enviar el nombre en el cuerpo del POST
                 console.log("Se creó");
                 console.log(response);
                 getDatos(); // Refrescar la lista de descuentos
@@ -69,12 +69,13 @@ const ManageBrand = () => {
 
     return (
         <div className="table-container">
+            <h2 className="text-3xl text-center mb-3">Gestionar Marcas</h2>
             <InputModal initialValue="brand" onSubmit={handleNameSubmit} />
             <table className="discount-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Talla</th>
+                        <th>Marca</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -96,7 +97,7 @@ const ManageBrand = () => {
                             <td>
                                 {editId === item.id ? (
                                     <>
-                                    <button onClick={() => handleSave(item.id)}>Guardar</button>
+                                        <button onClick={() => handleSave(item.id)}>Guardar</button>
                                     </>
                                 ) : (
                                     <>

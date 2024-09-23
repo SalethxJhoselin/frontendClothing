@@ -69,12 +69,13 @@ const ManageColor = () => {
 
     return (
         <div className="table-container">
+                <h2 className="text-3xl text-center mb-3">Gestionar Colores</h2>
             <InputModal initialValue="color" onSubmit={handleNameSubmit} />
             <table className="discount-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Talla</th>
+                        <th>Color</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>

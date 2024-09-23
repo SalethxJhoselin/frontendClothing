@@ -72,6 +72,7 @@ const ManageDiscount = () => {
 
     return (
         <div className="table-container">
+                <h2 className="text-3xl text-center mb-3">Gestionar Descuentos</h2>
             <InputModal initialValue="descuento" onSubmit={handleNameSubmit} />
             <table className="discount-table">
                 <thead>
