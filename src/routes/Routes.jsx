@@ -13,6 +13,10 @@ import ManageSize from '../components/views/Productos/ManageSize';
 import ManageColor from '../components/views/Productos/ManageColor';
 import ManageBrand from '../components/views/Productos/ManageBrand';
 import ManageCategory from '../components/views/Productos/ManageCategory';
+import ManageProduct from '../components/views/Productos/ManageProducts';
+import PurchaseReceipt from '../components/views/Catalogo/PurchaseReceipt';
+import ManageSucursal from '../components/views/Inventario/ManageSucursal';
+import ManageNotaIngreso from '../components/views/Inventario/ManageNotaIngreso';
 
 const MyRoutes = () => {
     const { isLoggedIn } = useAuth();
@@ -32,6 +36,7 @@ const MyRoutes = () => {
                 </>
             )}
             <Route path="/catalog" element={<Catalog />} />
+            <Route path="/purchase-receipt" element={<PurchaseReceipt />} />
             <Route path="/" element={<Catalog />} />
             {/*Protected Routes */}
             <Route element={<ProtectedRoute />}>
@@ -40,6 +45,9 @@ const MyRoutes = () => {
                 <Route path="/color" element={<ManageColor />} />
                 <Route path="/marca" element={<ManageBrand />} />
                 <Route path="/categoria" element={<ManageCategory />} />
+                <Route path="/producto" element={<ManageProduct />} />
+                <Route path="/sucursal" element={<ManageSucursal />} />
+                <Route path="/notaIngreso" element={<ManageNotaIngreso />} />
 
 
 
@@ -49,6 +57,9 @@ const MyRoutes = () => {
                 <Route path="/admin/permissions" element={<ManagePermissions />} />*/}
                 <Route path="/admin/users" element={<ManageUsuarios />} />
             </Route>
+
+
+            
             {/* Ruta por defecto para redirigir a login si no coincide ninguna ruta */}
             <Route path="*" element={<Navigate to={isLoggedIn ? "/catalog" : "/login"} />} />
         </Routes>

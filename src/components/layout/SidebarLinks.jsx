@@ -59,6 +59,10 @@ const SidebarLinks = () => [
     icon: <SettingOutlined />,
     subMenu: [
       {
+        label: "Gestionar Sucursales",
+        to: "/sucursal",
+      },
+      {
         label: "Notas de ingreso",
         to: "/notaIngreso",
       },

@@ -4,7 +4,7 @@ import Navbar from './components/Layout/Navbar';
 import MyRoutes from './routes/Routes'; //modifique esto a Routes de routes
 import Sidebar from './components/Layout/Sidebar';
 import { AuthProvider, useAuth } from './context/AuthContext';
-
+import { CartProvider } from './context/CartContext';
 
 const AppContent = () => {
   const { isLoggedIn, sidebarOpen, setSidebarOpen } = useAuth();
@@ -27,7 +27,9 @@ const AppContent = () => {
 const App = () => (
   <BrowserRouter>
     <AuthProvider>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </AuthProvider>
   </BrowserRouter>
 );
