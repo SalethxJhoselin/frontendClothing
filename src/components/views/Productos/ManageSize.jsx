@@ -9,7 +9,7 @@ const ManageSize = () => {
 
     const getDatos = async () => {
         try {
-            const response = await api.get("/size");
+            const response = await api.get("/tallas/");
             console.log("response.data");
             console.log(response.data);
             setData(response.data);
@@ -25,7 +25,7 @@ const ManageSize = () => {
     const handleNameSubmit = async (name) => {
         if (name.nombre && name.nombre.trim() !== "") {
             try {
-                const response = await api.post("/size", {nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
+                const response = await api.post("/tallas/", {nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
                 console.log("Se creó");
                 console.log(response);
                 getDatos(); // Refrescar la lista de descuentos
@@ -44,8 +44,7 @@ const ManageSize = () => {
 
     const handleSave = async (id) => {
         try {
-            const response = await api.put(`/size`, {
-                id: id,
+            const response = await api.put(`/tallas/${id}/`, {
                 nombre: editDescripcion
             });
             getDatos();
@@ -58,7 +57,7 @@ const ManageSize = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await api.delete(`/size/${id}`);
+            const response = await api.delete(`/tallas/${id}/`);
             getDatos();
             setEditId(null);
             console.log('Eliminacion exitosa', response);

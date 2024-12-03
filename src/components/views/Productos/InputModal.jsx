@@ -11,8 +11,14 @@ const InputModal = ({ initialValue, onSubmit }) => {
         setExtraInputValue('');
         setInputValue('');
         setIsModalOpen(true);
+
+        // Si la inicialización es para 'descuento', muestra el input adicional
         if (initialValue === "descuento") {
             setShowExtraInput(true);
+        }
+        // Si la inicialización es para 'categoria-color', no muestra input adicional
+        if (initialValue === "categoria-color") {
+            setShowExtraInput(false);
         }
     };
 
@@ -24,14 +30,6 @@ const InputModal = ({ initialValue, onSubmit }) => {
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
-        /*console.log("entro qwe")
-        // Si el valor ingresado es "categoria", muestra el segundo input
-        if (value.toLowerCase() === 'qwe') {//esta es una belleza, no sabia que existia
-            setShowExtraInput(true);
-        } else {
-            setShowExtraInput(false);
-            setExtraInputValue(''); // Limpia el segundo input si no es "categoria"
-        }*/
     };
 
     const handleExtraInputChange = (e) => {

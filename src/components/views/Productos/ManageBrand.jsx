@@ -9,8 +9,7 @@ const ManageBrand = () => {
 
     const getDatos = async () => {
         try {
-            const response = await api.get("/brand");
-            console.log("response.data");
+            const response = await api.get("/marcas/");
             console.log(response.data);
             setData(response.data);
         } catch (error) {
@@ -25,7 +24,7 @@ const ManageBrand = () => {
     const handleNameSubmit = async (name) => {
         if (name.nombre && name.nombre.trim() !== "") {
             try {
-                const response = await api.post("/brand", { nombre: name.nombre }); // Enviar el nombre en el cuerpo del POST
+                const response = await api.post("/marcas/", { nombre: name.nombre }); // Enviar el nombre en el cuerpo del POST
                 console.log("Se creó");
                 console.log(response);
                 getDatos(); // Refrescar la lista de descuentos
@@ -38,14 +37,13 @@ const ManageBrand = () => {
     };
 
     const handleEdit = (item) => {
-        setEditId(item.id);  // Establece el ID del elemento que está siendo editado
+        setEditId(item.id);  
         setEditDescripcion(item.nombre);
     };
 
     const handleSave = async (id) => {
         try {
-            const response = await api.put(`/brand`, {
-                id: id,
+            const response = await api.put(`/marcas/${id}/`, {
                 nombre: editDescripcion
             });
             getDatos();
@@ -58,7 +56,7 @@ const ManageBrand = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await api.delete(`/brand/${id}`);
+            const response = await api.delete(`/marcas/${id}/`);
             getDatos();
             setEditId(null);
             console.log('Eliminacion exitosa', response);

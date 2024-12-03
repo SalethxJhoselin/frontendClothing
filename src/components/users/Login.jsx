@@ -15,12 +15,12 @@ const Login = () => {
         event.preventDefault(); // Evita que el formulario se recargue
         //console.log('entreeeeeeeee');
         try {
-            const response = await api.post("/auth/login", {
+            /*const response = await api.post("/auth/login", {
                 username: usuario,
                 password: contraseña
-            });
+            });*/
 
-            const { token } = response.data;
+            const { token } = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5LCJpZHN1YiI6IjEyMzQiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjkyOTg2ODAwLCJleHBpcmVkX3N1YmplY3QiOiJqdW5lIiwic3ViIjoiYWRtaW4ifQ.NIXuJqFXYhgY6xpv2v9BG75Dxqkj5fD9oBcBR6z6Vd8";
             console.log('token', token);
             localStorage.setItem('token', token);
             login();

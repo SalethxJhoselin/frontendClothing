@@ -9,7 +9,7 @@ const ManageColor = () => {
 
     const getDatos = async () => {
         try {
-            const response = await api.get("/color");
+            const response = await api.get("/colores/");
             console.log("response.data");
             console.log(response.data);
             setData(response.data);
@@ -25,7 +25,7 @@ const ManageColor = () => {
     const handleNameSubmit = async (name) => {
         if (name.nombre && name.nombre.trim() !== "") {
             try {
-                const response = await api.post("/color", {nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
+                const response = await api.post("/colores/", {nombre: name.nombre}); // Enviar el nombre en el cuerpo del POST
                 console.log("Se creó");
                 console.log(response);
                 getDatos(); // Refrescar la lista de descuentos
@@ -44,8 +44,7 @@ const ManageColor = () => {
 
     const handleSave = async (id) => {
         try {
-            const response = await api.put(`/color`, {
-                id: id,
+            const response = await api.put(`/colores/${id}/`, {
                 nombre: editDescripcion
             });
             getDatos();
@@ -58,7 +57,7 @@ const ManageColor = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await api.delete(`/color/${id}`);
+            const response = await api.delete(`/color/${id}/`);
             getDatos();
             setEditId(null);
             console.log('Eliminacion exitosa', response);

@@ -18,10 +18,6 @@ const SidebarLinks = () => [
         label: "Administrar permisos",
         to: "/personnel/healthcare-professionals-registry",
       },
-      {
-        label: "Administrar usuarios",
-        to: "/personnel/healthcare-professionals-registry",
-      }
     ],
   },
   {
@@ -33,8 +29,8 @@ const SidebarLinks = () => [
         to: "/categoria",
       },
       {
-        label: "Gestionar Descuentos",
-        to: "/descuento",
+        label: "Gestionar Categorias de Colores",
+        to: "/categoria_color",
       },
       {
         label: "Gestionar Color",
@@ -55,34 +51,16 @@ const SidebarLinks = () => [
     ],
   },
   {
-    label: "Inventario",
+    label: "Compras y Ventas",
     icon: <SettingOutlined />,
     subMenu: [
-      {
-        label: "Gestionar Sucursales",
-        to: "/sucursal",
-      },
       {
         label: "Notas de ingreso",
         to: "/notaIngreso",
       },
       {
-        label: "Notas de egreso",
-        to: "/notaEgreso",
-      },
-      {
-        label: "Gestionar Inventario",
-        to: "/sinventario",
-      }
-    ],
-  },
-  {
-    label: "Ventas",
-    icon: <AimOutlined />,
-    subMenu: [
-      {
-        label: "Nota de venta",
-        to: "/notaVenta",
+        label: "Notas de venta",
+        to: "/ventas",
       },
       {
         label: "Tipo de pago",
