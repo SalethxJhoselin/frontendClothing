@@ -15,7 +15,6 @@ import ManageBrand from '../components/views/Productos/ManageBrand';
 import ManageCategory from '../components/views/Productos/ManageCategory';
 import ManageProduct from '../components/views/Productos/ManageProducts';
 import PurchaseReceipt from '../components/views/Catalogo/PurchaseReceipt';
-import ManageSucursal from '../components/views/Inventario/ManageSucursal';
 import ManageNotaIngreso from '../components/views/Inventario/ManageNotaIngreso';
 import ManageCategoryColor from '../components/views/Productos/ManageCategoryColor';
 
@@ -48,7 +47,6 @@ const MyRoutes = () => {
                 <Route path="/categoria" element={<ManageCategory />} />
                 <Route path="/categoria_color" element={<ManageCategoryColor />} />
                 <Route path="/producto" element={<ManageProduct />} />
-                <Route path="/sucursal" element={<ManageSucursal />} />
                 <Route path="/notaIngreso" element={<ManageNotaIngreso />} />
 
 

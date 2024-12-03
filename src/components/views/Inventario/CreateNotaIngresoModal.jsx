@@ -1,52 +1,72 @@
-import { useState, useEffect } from 'react';
-import api from './api'; // Asumo que tienes un archivo api.js donde defines tus llamadas a la API
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Input, Select, Space } from 'antd';
+import api from '../../../api/apiServices';
 
-function CreateNotaIngresoModal({ closeModal, refreshNotas }) {
-    const [sucursales, setSucursales] = useState([]);
+const { Option } = Select;
+
+function CreateNotaIngresoModal({ visible, closeModal, refreshNotas }) {
     const [productos, setProductos] = useState([]);
     const [nota, setNota] = useState({
-        sucursal: '',
-        productosSeleccionados: [],
+        observacion: '',
+        detalles: [], // Detalles de los productos seleccionados
     });
 
     useEffect(() => {
-        // Llamadas a la API para obtener sucursales y productos al cargar el modal
-        fetchSucursales();
         fetchProductos();
     }, []);
 
-    const fetchSucursales = async () => {
-        try {
-            const response = await api.get('/sucursal');
-            setSucursales(response.data);
-        } catch (error) {
-            console.error('Error al obtener las sucursales:', error);
-        }
-    };
-
     const fetchProductos = async () => {
         try {
-            const response = await api.get('/producto');
+            const response = await api.get('/productos/');
             setProductos(response.data);
         } catch (error) {
             console.error('Error al obtener los productos:', error);
         }
     };
 
-    const handleAddProducto = (productoId, cantidad) => {
+    // Función para manejar la selección de producto
+    const handleAddProducto = (productoId) => {
+        // Verificar si el producto ya está seleccionado
+        if (!nota.detalles.some((detalle) => detalle.producto === productoId)) {
+            setNota((prevNota) => ({
+                ...prevNota,
+                detalles: [
+                    ...prevNota.detalles,
+                    { producto: productoId, cantidad: 1 }, // Valor inicial de cantidad
+                ],
+            }));
+        }
+    };
+
+    // Función para manejar la actualización de la cantidad
+    const handleCantidadChange = (productoId, cantidad) => {
         setNota((prevNota) => ({
             ...prevNota,
-            productosSeleccionados: [
-                ...prevNota.productosSeleccionados,
-                { productoId, cantidad },
-            ],
+            detalles: prevNota.detalles.map((detalle) =>
+                detalle.producto === productoId
+                    ? { ...detalle, cantidad: parseInt(cantidad) }
+                    : detalle
+            ),
         }));
     };
 
+    // Función para manejar la eliminación de un producto
+    const handleRemoveProducto = (productoId) => {
+        setNota((prevNota) => ({
+            ...prevNota,
+            detalles: prevNota.detalles.filter((detalle) => detalle.producto !== productoId),
+        }));
+    };
+
+    // Función para crear la nota de ingreso
     const handleCreateNota = async () => {
         try {
-            // Petición POST para enviar los datos de la nota de ingreso
-            await api.post('/notas-ingreso', nota);
+            const data = {
+                observacion: nota.observacion,
+                detalles: nota.detalles,
+            };
+
+            await api.post('/notas-ingreso/', data);
             refreshNotas(); // Refrescar la lista de notas en el componente principal
             closeModal(); // Cerrar el modal
         } catch (error) {
@@ -55,42 +75,69 @@ function CreateNotaIngresoModal({ closeModal, refreshNotas }) {
     };
 
     return (
-        <div className="modal">
-            <h2>Crear Nota de Ingreso</h2>
-
-            {/*<div>
-                <label>Sucursal:</label>
-                <select
-                    onChange={(e) => setNota({ ...nota, sucursal: e.target.value })}
-                    value={nota.sucursal}
-                >
-                    <option value="">Seleccione una sucursal</option>
-                    {sucursales.map((sucursal) => (
-                        <option key={sucursal.id} value={sucursal.id}>
-                            {sucursal.nombre}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
+        <Modal
+            title="Crear Nota de Ingreso"
+            visible={visible}
+            onCancel={closeModal}
+            footer={[
+                <Button key="cancel" onClick={closeModal}>
+                    Cancelar
+                </Button>,
+                <Button key="submit" type="primary" onClick={handleCreateNota}>
+                    Guardar Nota de Ingreso
+                </Button>,
+            ]}
+        >
             <div>
-                <h3>Productos:</h3>
-                {productos.map((producto) => (
-                    <div key={producto.id}>
-                        <span>{producto.nombre} (Precio: {producto.precio})</span>
-                        <input
-                            type="number"
-                            placeholder="Cantidad"
-                            min="1"
-                            onChange={(e) => handleAddProducto(producto.id, e.target.value)}
-                        />
-                    </div>
-                ))}
-            </div>
+                <h3>Observación:</h3>
+                <Input
+                    value={nota.observacion}
+                    onChange={(e) => setNota({ ...nota, observacion: e.target.value })}
+                    placeholder="Ingrese una observación"
+                />
 
-            <button onClick={handleCreateNota}>Guardar Nota de Ingreso</button>
-            <button onClick={closeModal}>Cancelar</button>*/}
-        </div>
+                <div className="mt-4">
+                    <h3>Seleccione Productos:</h3>
+                    <Select
+                        style={{ width: '100%' }}
+                        placeholder="Selecciona un producto"
+                        onChange={handleAddProducto}
+                    >
+                        {productos.map((producto) => (
+                            <Option key={producto.id} value={producto.id}>
+                                {producto.nombre} (Precio: {producto.precio})
+                            </Option>
+                        ))}
+                    </Select>
+                </div>
+
+                <div className="mt-4">
+                    <h3>Productos Seleccionados:</h3>
+                    {nota.detalles.map((detalle) => (
+                        <div key={detalle.producto} className="mb-4">
+                            <Space style={{ width: '100%' }} align="baseline">
+                                <span>{productos.find((p) => p.id === detalle.producto)?.nombre}</span>
+                                <Input
+                                    type="number"
+                                    min="1"
+                                    value={detalle.cantidad}
+                                    onChange={(e) =>
+                                        handleCantidadChange(detalle.producto, e.target.value)
+                                    }
+                                    style={{ width: 80 }}
+                                />
+                                <Button
+                                    type="link"
+                                    onClick={() => handleRemoveProducto(detalle.producto)}
+                                >
+                                    Eliminar
+                                </Button>
+                            </Space>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </Modal>
     );
 }
 
