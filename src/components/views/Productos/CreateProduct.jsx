@@ -1,42 +1,42 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { useDropzone } from 'react-dropzone';
+import { Modal, Input, Button, Select, Spin, Upload, message } from 'antd';
 import api from '../../../api/apiServices';
+
+const { Option } = Select;
 
 const CreateProduct = ({ onSubmit }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [productData, setProductData] = useState({
         nombre: '',
+        descripcion: '',
         precio: '',
-        imagen: '',
-        category: null,
-        color: null,
-        size: null,
-        brand: null,
-        descuento: null,
+        imagen_url: '',
+        categoria: null,
+        marca: null,
+        colores: [],
+        tallas: [],
     });
 
     const [colors, setColors] = useState([]);
     const [sizes, setSizes] = useState([]);
     const [brands, setBrands] = useState([]);
-    const [discounts, setDiscounts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [uploadingImage, setUploadingImage] = useState(false);
 
     // Fetch data for select inputs
     const fetchSelectableData = async () => {
         try {
-            const [colorsRes, sizesRes, brandsRes, discountsRes, categoriesRes] = await Promise.all([
-                api.get('/color'),
-                api.get('/size'),
-                api.get('/brand'),
-                api.get('/discount'),
-                api.get('/category'),
+            const [colorsRes, sizesRes, brandsRes, categoriesRes] = await Promise.all([
+                api.get('/colores/'),
+                api.get('/tallas/'),
+                api.get('/marcas/'),
+                api.get('/categorias/'),
             ]);
             setColors(colorsRes.data);
             setSizes(sizesRes.data);
             setBrands(brandsRes.data);
-            setDiscounts(discountsRes.data);
             setCategories(categoriesRes.data);
         } catch (error) {
             console.error('Error fetching selectable data:', error);
@@ -63,6 +63,13 @@ const CreateProduct = ({ onSubmit }) => {
         }));
     };
 
+    const handleSelectChange = (name, value) => {
+        setProductData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     const present_name = "clothing";
     // Función para subir la imagen a Cloudinary
     const onDrop = useCallback(async (acceptedFiles) => {
@@ -81,11 +88,9 @@ const CreateProduct = ({ onSubmit }) => {
 
                 const data = await response.json();
                 const imageUrl = data.secure_url;
-                console.log("imageUrl");
-                console.log(imageUrl);
                 setProductData((prevData) => ({
                     ...prevData,
-                    imagen: imageUrl,
+                    imagen_url: imageUrl,
                 }));
                 setUploadingImage(false);
             } catch (error) {
@@ -97,184 +102,156 @@ const CreateProduct = ({ onSubmit }) => {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: 'image/*' });
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const formattedData = {
             ...productData,
-            category: productData.category ? { id: parseInt(productData.category) } : null,
-            color: productData.color ? { id: parseInt(productData.color) } : null,
-            size: productData.size ? { id: parseInt(productData.size) } : null,
-            brand: productData.brand ? { id: parseInt(productData.brand) } : null,
-            descuento: productData.descuento ? { id: parseInt(productData.descuento) } : null,
+            categoria: productData.categoria ? parseInt(productData.categoria) : 0,
+            marca: productData.marca ? parseInt(productData.marca) : 0,
+            colores: productData.colores.map((color) => parseInt(color)),
+            tallas: productData.tallas.map((size) => parseInt(size)),
+            stock: 0,  // Enviar stock como cero por defecto
+            popularidad: 0,  // Valor fijo para popularidad
         };
 
-        console.log("Datos enviados:", formattedData);
-
-        if (onSubmit) {
-            onSubmit(formattedData);
+        try {
+            await api.post('/productos/', formattedData);
+            message.success('Producto creado exitosamente');
+            if (onSubmit) onSubmit(formattedData);
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error('Error al crear el producto:', error);
+            message.error('Error al crear el producto');
         }
-        setIsModalOpen(false);
     };
 
     return (
         <div>
-            <button onClick={showModal} className="flex items-center gap-2 bg-blue text-white px-4 py-2 rounded hover:bg-teal">
-                <FaPlus /> Agregar Producto
-            </button>
+            <Button type="primary" icon={<FaPlus />} onClick={showModal}>
+                Agregar Producto
+            </Button>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl max-h-full overflow-y-auto">
-                        <h2 className="text-2xl font-bold mb-6">Crear Producto</h2>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Nombre */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Nombre:</label>
-                                <input
-                                    type="text"
-                                    name="nombre"
-                                    value={productData.nombre}
-                                    onChange={handleInputChange}
-                                    placeholder="Escribe un nombre..."
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                />
-                            </div>
-                            {/* Precio */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Precio:</label>
-                                <input
-                                    type="number"
-                                    name="precio"
-                                    value={productData.precio}
-                                    onChange={handleInputChange}
-                                    placeholder="Escribe el precio..."
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                />
-                            </div>
-                            {/* Color */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Color:</label>
-                                <select
-                                    name="color"
-                                    value={productData.color}
-                                    onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                >
-                                    <option value="">Selecciona un color</option>
-                                    {colors.map((color) => (
-                                        <option key={color.id} value={color.id}>
-                                            {color.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Talla:</label>
-                                <select
-                                    name="size"
-                                    value={productData.size}
-                                    onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                >
-                                    <option value="">Selecciona una talla</option>
-                                    {sizes.map((size) => (
-                                        <option key={size.id} value={size.id}>
-                                            {size.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Marca:</label>
-                                <select
-                                    name="brand"
-                                    value={productData.brand}
-                                    onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                >
-                                    <option value="">Selecciona una marca</option>
-                                    {brands.map((brand) => (
-                                        <option key={brand.id} value={brand.id}>
-                                            {brand.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Descuento:</label>
-                                <select
-                                    name="descuento"
-                                    value={productData.descuento}
-                                    onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                >
-                                    <option value="">Selecciona un descuento</option>
-                                    {discounts.map((descuento) => (
-                                        <option key={descuento.id} value={descuento.id}>
-                                            {descuento.porcentaje}% - {descuento.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Categoría:</label>
-                                <select
-                                    name="category"
-                                    value={productData.category}
-                                    onChange={handleInputChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                >
-                                    <option value="">Selecciona una categoría</option>
-                                    {categories.map((category) => (
-                                        <option key={category.id} value={category.id}>
-                                            {category.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            {/* Dropzone para subir la imagen */}
-                            <div className="col-span-2">
-                                <label className="block text-sm font-medium text-gray-700">Imagen:</label>
-                                <div {...getRootProps()} className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50">
-                                    <input {...getInputProps()} />
-                                    {isDragActive ? (
-                                        <p>Suelta la imagen aquí...</p>
-                                    ) : (
-                                        <p>Arrastra y suelta una imagen aquí, o haz clic para seleccionar una.</p>
-                                    )}
-                                </div>
-                                {uploadingImage && <p>Subiendo imagen...</p>}
-                            </div>
-
-                            {/* Imagen seleccionada */}
-                            {productData.imagen && (
-                                <div className="mt-6">
-                                    <img src={productData.imagen} alt="Vista previa de la imagen" className="max-w-xs rounded-lg shadow-md" />
-                                </div>
+            <Modal
+                title="Crear Producto"
+                visible={isModalOpen}
+                onCancel={handleClose}
+                footer={null}
+                width={800}
+            >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <Input
+                            name="nombre"
+                            placeholder="Nombre del producto"
+                            value={productData.nombre}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            name="descripcion"
+                            placeholder="Descripción del producto"
+                            value={productData.descripcion}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            name="precio"
+                            placeholder="Precio"
+                            type="number"
+                            value={productData.precio}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div>
+                        <Select
+                            name="categoria"
+                            value={productData.categoria}
+                            onChange={(value) => handleSelectChange('categoria', value)}
+                            placeholder="Selecciona una categoría"
+                            style={{ width: '100%' }}
+                        >
+                            {categories.map((category) => (
+                                <Option key={category.id} value={category.id}>
+                                    {category.nombre}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div>
+                        <Select
+                            name="marca"
+                            value={productData.marca}
+                            onChange={(value) => handleSelectChange('marca', value)}
+                            placeholder="Selecciona una marca"
+                            style={{ width: '100%' }}
+                        >
+                            {brands.map((brand) => (
+                                <Option key={brand.id} value={brand.id}>
+                                    {brand.nombre}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div>
+                        <Select
+                            mode="multiple"
+                            name="colores"
+                            value={productData.colores}
+                            onChange={(value) => handleSelectChange('colores', value)}
+                            placeholder="Selecciona colores"
+                            style={{ width: '100%' }}
+                        >
+                            {colors.map((color) => (
+                                <Option key={color.id} value={color.id}>
+                                    {color.nombre}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div>
+                        <Select
+                            mode="multiple"
+                            name="tallas"
+                            value={productData.tallas}
+                            onChange={(value) => handleSelectChange('tallas', value)}
+                            placeholder="Selecciona tallas"
+                            style={{ width: '100%' }}
+                        >
+                            {sizes.map((size) => (
+                                <Option key={size.id} value={size.id}>
+                                    {size.nombre}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div>
+                        <div {...getRootProps()} className="border-2 border-dashed p-4 mt-2">
+                            <input {...getInputProps()} />
+                            {isDragActive ? (
+                                <p>Suelta la imagen aquí...</p>
+                            ) : (
+                                <p>Arrastra y suelta una imagen aquí, o haz clic para seleccionar una.</p>
                             )}
                         </div>
-
-                        <div className="mt-8 flex justify-end gap-4">
-                            <button
-                                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
-                                onClick={handleClose}
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-blue text-white rounded hover:bg-teal"
-                                onClick={handleSubmit}
-                            >
-                                Crear Producto
-                            </button>
-                        </div>
+                        {uploadingImage && <Spin />}
+                        {productData.imagen_url && (
+                            <div className="mt-4">
+                                <h4>Vista previa de la imagen</h4>
+                                <img
+                                    src={productData.imagen_url}
+                                    alt="Vista previa"
+                                    style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
-            )}
+                <div className="flex justify-end gap-4 mt-6">
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button type="primary" onClick={handleSubmit}>Crear Producto</Button>
+                </div>
+            </Modal>
         </div>
     );
 };
