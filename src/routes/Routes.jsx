@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate, BrowserRouter } from 
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import { useAuth } from '../context/AuthContext';
 import Perfil from '../components/users/Perfil';
-/*import ManageRoles from '../components/views/administrador/ManageRoles';
-import ManagePermissions from '../components/views/administrador/ManagePermissions';*/
+import ManageRoles from '../components/views/administrador/ManageRoles';
+//import ManagePermissions from '../components/views/administrador/ManagePermissions';
 import ManageUsuarios from '../components/views/administrador/ManageUsuarios';
 import Login from '../components/users/Login';
 import Register from '../components/users/Register';
@@ -53,13 +53,13 @@ const MyRoutes = () => {
 
                 <Route path="/perfil" element={<Perfil />} />
 
-                {/*<Route path="/admin/roles" element={<ManageRoles />} />
-                <Route path="/admin/permissions" element={<ManagePermissions />} />*/}
+                <Route path="/roles" element={<ManageRoles />} />
+                {/*<Route path="/admin/permissions" element={<ManagePermissions />} />*/}
                 <Route path="/admin/users" element={<ManageUsuarios />} />
             </Route>
 
 
-            
+
             {/* Ruta por defecto para redirigir a login si no coincide ninguna ruta */}
             <Route path="*" element={<Navigate to={isLoggedIn ? "/catalog" : "/login"} />} />
         </Routes>

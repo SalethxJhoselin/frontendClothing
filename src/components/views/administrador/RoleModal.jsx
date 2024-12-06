@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal, Input, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { createRole } from '../../../api/apiService';
+import api from '../../../api/apiServices';
 
 const RoleModal = ({ getDatos }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,7 +10,7 @@ const RoleModal = ({ getDatos }) => {
 
     const handleOk = async () => {
         try {
-            await createRole(roleName);
+            await api.post("/roles/", { nombre: roleName });
             console.log(`el usuario x creo el rol: ${roleName}`);
             setIsModalOpen(false);
             setRoleName('');

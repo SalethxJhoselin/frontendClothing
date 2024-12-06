@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Checkbox, Button, Typography, notification } from 'antd';
 import { fetchRolePermissions, fetchPermissions, updateRolePermissions } from '../../../api/apiService';
+import api from '../../../api/apiServices';
 
 const { Title } = Typography;
 

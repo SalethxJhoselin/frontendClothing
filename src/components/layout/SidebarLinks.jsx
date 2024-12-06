@@ -12,7 +12,7 @@ const SidebarLinks = () => [
       },
       {
         label: "Administrar roles",
-        to: "/personnel/professions-registry",
+        to: "/roles",
       },
       {
         label: "Administrar permisos",

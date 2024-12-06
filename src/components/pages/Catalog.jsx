@@ -8,28 +8,26 @@ const Catalog = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    api.get('/producto/catalogo')
+    api.get('/productos/')
       .then(response => {
-        console.log("response");
-        console.log(response)
+        console.log("response", response);
+        
+        // Mapear los productos a la nueva estructura que se recibe del backend
         const backendProducts = response.data.map(item => ({
           id: item.id,
           name: item.nombre,
-          price: item.precio - (item.descuento ? (item.precio * item.descuento.porcentaje / 100) : 0),
-          originalPrice: item.precio,
-          image: item.imagen || 'https://via.placeholder.com/150', // Imagen por defecto si falta
-          description: `${item.nombre} de la marca ${item.brand.nombre}. 
-                        Talla: ${item.talla.nombre}. 
-                        Color: ${item.color.nombre}. 
-                        Categoría: ${item.category.nombre}. 
-                        ${item.descuento ? `Descuento: ${item.descuento.porcentaje}% (${item.descuento.nombre})` : ''}`,
-          discount: item.descuento ? `${item.descuento.porcentaje}% de descuento (${item.descuento.nombre})` : null,
-          category: item.category.nombre,
-          brand: item.brand.nombre,
-          size: item.talla.nombre,
-          color: item.color.nombre,
-          inventory: item.cantidadEnInventario,
+          price: parseFloat(item.precio), // Convertir precio a número
+          originalPrice: parseFloat(item.precio),
+          image: item.imagen_url || 'https://via.placeholder.com/150', // Imagen por defecto si falta
+          description: item.descripcion,
+          category: item.categoria, // Relacionado a la categoría
+          brand: item.marca, // Relacionado a la marca
+          colors: item.colores, // Relacionado a los colores
+          sizes: item.tallas, // Relacionado a las tallas
+          stock: item.stock,
+          dateAdded: item.fecha_agregado,
         }));
+
         setProducts(backendProducts);
       })
       .catch(error => {
@@ -40,7 +38,11 @@ const Catalog = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Catálogo de Ropa</h1>
+      
+      {/* Lista de productos */}
       <ProductList products={products} onSelect={setSelectedProduct} />
+      
+      {/* Detalle del producto seleccionado */}
       {selectedProduct && (
         <ProductDetail
           product={selectedProduct}

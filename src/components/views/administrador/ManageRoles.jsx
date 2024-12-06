@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Space, Table, Button, Input, Typography } from 'antd';
 import RoleModal from './RoleModal';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { fetchRoles, updateRole, deleteRole } from '../../../api/apiService';
+import api from '../../../api/apiServices';
 
 const { Title } = Typography;
 const ManageRoles = () => {
@@ -13,7 +13,7 @@ const ManageRoles = () => {
   // Obtener datos
   const fetchData = async () => {
     try {
-      const rolesData = await fetchRoles();
+      const rolesData = await api.get("/roles/");
       setRoles(rolesData);
     } catch (error) {
       notification.error({ message: 'Error al obtener roles', description: error.message });
@@ -35,7 +35,9 @@ const ManageRoles = () => {
   const handleSaveRole = useCallback(async (roleId) => {
     try {
       console.log("el usuario edito el rol")
-      await updateRole(roleId, editedData[roleId]);
+      await api.put(`/roles/${id}/`, {
+        nombre: editedData[roleId]
+      });
       setRoles(prevRoles => prevRoles.map(role => role.id === roleId ? { ...role, ...editedData[roleId] } : role));
       setEditingRoleId(null);
     } catch (error) {
@@ -50,7 +52,8 @@ const ManageRoles = () => {
 
   const handleDeleteRole = useCallback(async (roleName) => {
     try {
-      await deleteRole(roleName);
+      comsole.log('roleNameEEE', roleName)
+      await api.delete(`/marcas/${roleName}/`)
       console.log("el usuario elimino el rol")
       setRoles(prevRoles => prevRoles.filter(role => role.nombre !== roleName));
 
