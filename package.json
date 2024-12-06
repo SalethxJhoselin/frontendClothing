@@ -18,6 +18,8 @@
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "gsap": "^3.12.5",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "jwt-decode": "^4.0.0",
     "oftalmologica": "file:",
     "react": "^18.3.1",

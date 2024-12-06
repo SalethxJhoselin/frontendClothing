@@ -1,36 +1,87 @@
 import React from 'react';
 import { useCart } from '../../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../api/apiServices'; // Asegúrate de importar tu instancia de Axios
+import { useAuth } from '../../../context/AuthContext'; // Para obtener el userId
+import jsPDF from 'jspdf'; // Importa la librería para generar PDFs
+import 'jspdf-autotable'; // Plugin para tablas en jsPDF
 
 const CartModal = ({ onClose }) => {
     const { cart, clearCart } = useCart(); // Accede a los productos en el carrito
+    const { userId } = useAuth(); // Obtener el userId del contexto de autenticación
     const navigate = useNavigate();
 
-    const handlePurchase = () => {
-        // Simula la redirección a una página de pago de Stripe
-        const stripeQRCodeURL = "https://buy.stripe.com/test_buy"; // URL del QR simulado de Stripe
-        // Redirigir al usuario a Stripe
-        window.open(stripeQRCodeURL, '_blank');
+    const handlePurchase = async () => {
+        if (cart.length === 0) {
+            console.warn("El carrito está vacío. No se puede realizar la compra.");
+            return;
+        }
+
         const subtotal = cart.reduce((total, product) => total + product.price * product.quantity, 0);
+
         // Prepara los datos para enviar al backend
         const purchaseData = {
-            items: cart.map(product => ({
-                id: product.id,
-                name: product.name,
-                quantity: product.quantity,
-                price: product.price.toFixed(2),
-                discount: product.discount,
+            observacion: "Compra desde frontend",
+            detalles: cart.map(product => ({
+                producto: product.id,
+                cantidad: product.quantity,
             })),
-            subtotal: subtotal.toFixed(2),
         };
-        console.log("purchaseData");
-        console.log(purchaseData);
-        // Simula la finalización del pago y muestra la nota de compra
-        navigate('/purchase-receipt');// Redirige a una página de recibo de compra
-        setTimeout(() => {
-            //clearCart(); // Limpiar el carrito después de la compra, pero cuando se limpia, la nota de compra tambien se elimina
-        }, 10000); // Ajusta el tiempo según lo necesario para simular el pago
+
+        try {
+            // Enviar la solicitud al backend
+            const response = await api.post('/notas-venta/', purchaseData);
+            console.log("Nota de venta registrada exitosamente:", response.data);
+
+            // Generar el PDF con los detalles de la nota de venta
+            generatePDF(purchaseData);
+
+            // Redirige a una página de recibo de compra
+            navigate('/purchase-receipt');
+
+            // Limpia el carrito después de la compra
+            clearCart();
+        } catch (error) {
+            console.error("Error al registrar la nota de venta:", error);
+        }
     };
+
+    const generatePDF = (data) => {
+        const doc = new jsPDF();
+
+        // Título del documento
+        doc.setFontSize(18);
+        doc.text('Nota de Venta', 105, 15, { align: 'center' });
+
+        // Información del usuario
+        doc.setFontSize(12);
+        doc.text(`Usuario ID: ${userId}`, 10, 30);
+        doc.text(`Observación: ${data.observacion}`, 10, 40);
+
+        // Tabla con detalles de los productos
+        const tableColumn = ['Producto ID', 'Nombre', 'Cantidad', 'Precio Unitario ($)', 'Subtotal ($)'];
+        const tableRows = cart.map(product => [
+            product.id,
+            product.name,
+            product.quantity,
+            product.price.toFixed(2),
+            (product.price * product.quantity).toFixed(2),
+        ]);
+
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 50,
+        });
+
+        // Total general
+        const total = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
+        doc.text(`Total: $${total.toFixed(2)}`, 10, doc.previousAutoTable.finalY + 10);
+
+        // Guardar el archivo
+        doc.save('nota_de_venta.pdf');
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-1/2 relative">
