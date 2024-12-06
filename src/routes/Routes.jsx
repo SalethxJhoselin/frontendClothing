@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import { useAuth } from '../context/AuthContext';
-import Perfil from '../components/users/Perfil';
+import UserPerfil from '../components/users/UserPerfil';
 import ManageRoles from '../components/views/administrador/ManageRoles';
 import ManageUsuarios from '../components/views/administrador/ManageUsuarios';
 import Login from '../components/users/Login';
@@ -18,6 +18,7 @@ import PurchaseReceipt from '../components/views/Catalogo/PurchaseReceipt';
 import ManageNotaIngreso from '../components/views/Inventario/ManageNotaIngreso';
 import ManageCategoryColor from '../components/views/Productos/ManageCategoryColor';
 import ManageUsers from '../components/views/administrador/ManageUsers';
+
 
 const MyRoutes = () => {
     const { isLoggedIn } = useAuth();
@@ -52,7 +53,7 @@ const MyRoutes = () => {
 
 
 
-                <Route path="/perfil" element={<Perfil />} />
+                <Route path="/perfil" element={<UserPerfil />} />
 
                 <Route path="/roles" element={<ManageRoles />} />
                 <Route path="/permisos" element={<ManagePermissions />} />

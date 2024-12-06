@@ -1,61 +1,73 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-/*Crear el contexto de autenticación ya que manejar este estado en multiples componentes
-puede volverse complicado con el Context API de React creamos una fuente central de 
-información que puede ser accedida por cualquier componente en la jerarquía de la aplicación.
-*/
+import {jwtDecode} from 'jwt-decode'; // Importa jwt-decode para manejar el token
+
 const AuthContext = createContext();
 
-// Proveedor del contexto
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('loggedIn') === 'true');
+  const [userId, setUserId] = useState(null); // Estado para el ID del usuario
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
-  // Definir el tiempo de inactividad permitido (ejemplo: 15 minutos)
   const SESSION_TIMEOUT = 150 * 60 * 1000; // 15 minutos en milisegundos
   let timeoutId;
 
   const login = () => {
     setIsLoggedIn(true);
     localStorage.setItem('loggedIn', 'true');
-    startInactivityTimer(); // Iniciar temporizador de inactividad al iniciar sesión
+    extractUserIdFromToken(); // Extraer el ID del usuario del token al iniciar sesión
+    startInactivityTimer();
   };
 
   const logout = () => {
     setIsLoggedIn(false);
     localStorage.setItem('loggedIn', 'false');
     localStorage.removeItem('token');
-    navigate('/login'); // Redirigir al login al cerrar sesión
+    setUserId(null); // Limpiar el ID del usuario al cerrar sesión
+    navigate('/login');
   };
-  // Función para iniciar el temporizador de inactividad
+
   const startInactivityTimer = () => {
-    clearTimeout(timeoutId); // Limpiar cualquier temporizador anterior
+    clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       console.log('Tu sesión ha expirado por inactividad.');
-      logout(); // Cerrar sesión cuando expire el tiempo
+      logout();
     }, SESSION_TIMEOUT);
   };
 
-  // Escuchar eventos de actividad del usuario
   const resetInactivityTimer = () => {
     clearTimeout(timeoutId);
     startInactivityTimer();
   };
+
+  // Extraer el ID del usuario del token
+  const extractUserIdFromToken = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Decodificar el token JWT
+        setUserId(decoded.user_id); // Extraer y almacenar el ID del usuario
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    }
+  };
+
   useEffect(() => {
-    // Agregar listeners para detectar actividad del usuario
+    if (isLoggedIn) {
+      extractUserIdFromToken(); // Extraer el ID del usuario al montar el contexto si está logueado
+      startInactivityTimer();
+    }
+
+    // Listeners de actividad del usuario
     window.addEventListener('mousemove', resetInactivityTimer);
     window.addEventListener('keydown', resetInactivityTimer);
     window.addEventListener('click', resetInactivityTimer);
     window.addEventListener('touchstart', resetInactivityTimer);
     window.addEventListener('touchend', resetInactivityTimer);
     window.addEventListener('touchmove', resetInactivityTimer);
-    // Iniciar temporizador cuando el componente se monta
-    if (isLoggedIn) {
-      startInactivityTimer();
-    }
 
-    // Limpiar eventos y timeout al desmontar el componente
     return () => {
       window.removeEventListener('mousemove', resetInactivityTimer);
       window.removeEventListener('keydown', resetInactivityTimer);
@@ -70,6 +82,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const handleStorageChange = () => {
       setIsLoggedIn(localStorage.getItem('loggedIn') === 'true');
+      if (isLoggedIn) {
+        extractUserIdFromToken(); // Extraer el ID del usuario si cambia el almacenamiento
+      }
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -77,14 +92,13 @@ export const AuthProvider = ({ children }) => {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [isLoggedIn]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, sidebarOpen, setSidebarOpen, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId, sidebarOpen, setSidebarOpen, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// useAuth->Hook que permite acceder al contexto de autenticación fácilmente desde cualquier componente.
 export const useAuth = () => useContext(AuthContext);

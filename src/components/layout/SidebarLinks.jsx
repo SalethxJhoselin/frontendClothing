@@ -8,7 +8,7 @@ const SidebarLinks = () => [
     subMenu: [
       {
         label: "Administrar Perfil",
-        to: "/personnel/manageEmployees",
+        to: "/perfil",
       },
       {
         label: "Administrar roles",

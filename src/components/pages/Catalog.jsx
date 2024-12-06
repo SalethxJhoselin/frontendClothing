@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../../api/apiServices'; // Importa la instancia configurada de Axios
 import ProductList from '../views/Catalogo/ProductList';
 import ProductDetail from '../views/Catalogo/ProductDetail';
+import { useAuth } from '../../context/AuthContext';
 
 const Catalog = () => {
+  const { userId } = useAuth();
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
