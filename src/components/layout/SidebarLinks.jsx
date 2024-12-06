@@ -65,11 +65,11 @@ const SidebarLinks = () => [
       {
         label: "Notas de venta",
         to: "/ventas",
-      },
+      }/*,
       {
         label: "Tipo de pago",
         to: "/tipoPago",
-      }
+      }*/
     ],
   }
 ];

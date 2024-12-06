@@ -21,7 +21,7 @@ const CartModal = ({ onClose }) => {
 
         // Prepara los datos para enviar al backend
         const purchaseData = {
-            observacion: "Compra desde frontend",
+            observacion: "Compra a través de Stripe",
             detalles: cart.map(product => ({
                 producto: product.id,
                 cantidad: product.quantity,
@@ -35,6 +35,10 @@ const CartModal = ({ onClose }) => {
 
             // Generar el PDF con los detalles de la nota de venta
             generatePDF(purchaseData);
+
+            // Redirigir al usuario a Stripe para completar el pago
+            const stripeURL = "https://buy.stripe.com/test_9AQbKF5h9gaO1Qk5ko";
+            window.open(stripeURL, '_blank');
 
             // Redirige a una página de recibo de compra
             navigate('/purchase-receipt');

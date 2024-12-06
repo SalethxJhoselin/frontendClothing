@@ -18,7 +18,7 @@ import PurchaseReceipt from '../components/views/Catalogo/PurchaseReceipt';
 import ManageNotaIngreso from '../components/views/Inventario/ManageNotaIngreso';
 import ManageCategoryColor from '../components/views/Productos/ManageCategoryColor';
 import ManageUsers from '../components/views/administrador/ManageUsers';
-
+import NotaVents from '../components/views/Inventario/NotaVents';
 
 const MyRoutes = () => {
     const { isLoggedIn } = useAuth();
@@ -50,6 +50,7 @@ const MyRoutes = () => {
                 <Route path="/categoria_color" element={<ManageCategoryColor />} />
                 <Route path="/producto" element={<ManageProduct />} />
                 <Route path="/notaIngreso" element={<ManageNotaIngreso />} />
+                <Route path="/ventas" element={<NotaVents />} />
 
 
 
