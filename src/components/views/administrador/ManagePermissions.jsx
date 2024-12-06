@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Checkbox, Button, Typography, notification } from 'antd';
-import { fetchRolePermissions, fetchPermissions, updateRolePermissions } from '../../../api/apiService';
 import api from '../../../api/apiServices';
 
 const { Title } = Typography;
@@ -15,26 +14,28 @@ const ManagePermissions = () => {
     useEffect(() => {
         const loadRolesAndPermissions = async () => {
             try {
-                const rolesData = await fetchRolePermissions();
-                const permissionsData = await fetchPermissions(); // Obtener permisos desde la API
-                setRoles(rolesData);
-                setPermissions(permissionsData);
+                const [rolesData, permissionsData] = await Promise.all([
+                    api.get("/roles/"),
+                    api.get("/permisos/")
+                ]);
+                setRoles(rolesData.data);
+                setPermissions(permissionsData.data);
             } catch (error) {
-                notification.error({ message: 'Error al obtener roles o permisos', description: error.message });
+                notification.error({ 
+                    message: 'Error al obtener roles o permisos',
+                    description: error.response?.data?.detail || error.message
+                });
             }
         };
 
         loadRolesAndPermissions();
     }, []);
+
     // Manejar cambio de rol
     const handleRoleChange = (value) => {
         setSelectedRoleId(value);
         const selectedRole = roles.find(role => role.id === value);
-        if (selectedRole) {
-            setRolePermissions(selectedRole.permisos.map(permission => permission.id));
-        } else {
-            setRolePermissions([]);
-        }
+        setRolePermissions(selectedRole?.permisos || []);
     };
 
     // Manejar cambio de permisos
@@ -48,20 +49,31 @@ const ManagePermissions = () => {
 
     // Guardar permisos y recargar datos
     const handleSavePermissions = async () => {
+        const selectedRole = roles.find(role => role.id === selectedRoleId);
+        if (!selectedRole) {
+            notification.error({ message: 'Rol seleccionado no válido' });
+            return;
+        }
+
         const updatedRolePermissions = {
-            permissions: rolePermissions
+            permisos: rolePermissions,
+            nombre: selectedRole.nombre,
+            descripcion: selectedRole.descripcion
         };
+
         try {
-            await updateRolePermissions(selectedRoleId, updatedRolePermissions);
+            await api.post(`/roles/${selectedRoleId}/asignar_permisos/`, updatedRolePermissions);
             notification.success({ message: 'Permisos actualizados correctamente' });
-            const updatedRolesData = await fetchRolePermissions();
-            const updatedRole = updatedRolesData.find(role => role.id === selectedRoleId);
-            if (updatedRole) {
-                setRolePermissions(updatedRole.permisos.map(permission => permission.id));
-            }
-            setRoles(updatedRolesData);
+            // Recargar datos actualizados
+            const updatedRolesData = await api.get("/roles/");
+            setRoles(updatedRolesData.data);
+            const updatedRole = updatedRolesData.data.find(role => role.id === selectedRoleId);
+            setRolePermissions(updatedRole?.permisos || []);
         } catch (error) {
-            notification.error({ message: 'Error al actualizar permisos', description: error.message });
+            notification.error({ 
+                message: 'Error al actualizar permisos',
+                description: error.response?.data?.detail || error.message 
+            });
         }
     };
 

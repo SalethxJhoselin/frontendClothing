@@ -3,9 +3,9 @@ import ProtectedRoute from '../components/layout/ProtectedRoute';
 import { useAuth } from '../context/AuthContext';
 import Perfil from '../components/users/Perfil';
 import ManageRoles from '../components/views/administrador/ManageRoles';
-//import ManagePermissions from '../components/views/administrador/ManagePermissions';
 import ManageUsuarios from '../components/views/administrador/ManageUsuarios';
 import Login from '../components/users/Login';
+import ManagePermissions from '../components/views/administrador/ManagePermissions';
 import Register from '../components/users/Register';
 import Catalog from '../components/pages/Catalog';
 import ManageDiscount from '../components/views/Productos/ManageDiscount';
@@ -54,7 +54,7 @@ const MyRoutes = () => {
                 <Route path="/perfil" element={<Perfil />} />
 
                 <Route path="/roles" element={<ManageRoles />} />
-                {/*<Route path="/admin/permissions" element={<ManagePermissions />} />*/}
+                <Route path="/permisos" element={<ManagePermissions />} />
                 <Route path="/admin/users" element={<ManageUsuarios />} />
             </Route>
 

@@ -16,7 +16,7 @@ const SidebarLinks = () => [
       },
       {
         label: "Administrar permisos",
-        to: "/personnel/healthcare-professionals-registry",
+        to: "/permisos",
       },
     ],
   },

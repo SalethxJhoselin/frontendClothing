@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsLoggedIn(false);
     localStorage.setItem('loggedIn', 'false');
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
     navigate('/login'); // Redirigir al login al cerrar sesión
   };
   // Función para iniciar el temporizador de inactividad

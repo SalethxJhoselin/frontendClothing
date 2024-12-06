@@ -14,7 +14,7 @@ const ManageRoles = () => {
   const fetchData = async () => {
     try {
       const rolesData = await api.get("/roles/");
-      setRoles(rolesData);
+      setRoles(rolesData.data);
     } catch (error) {
       notification.error({ message: 'Error al obtener roles', description: error.message });
     }
