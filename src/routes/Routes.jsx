@@ -17,6 +17,7 @@ import ManageProduct from '../components/views/Productos/ManageProducts';
 import PurchaseReceipt from '../components/views/Catalogo/PurchaseReceipt';
 import ManageNotaIngreso from '../components/views/Inventario/ManageNotaIngreso';
 import ManageCategoryColor from '../components/views/Productos/ManageCategoryColor';
+import ManageUsers from '../components/views/administrador/ManageUsers';
 
 const MyRoutes = () => {
     const { isLoggedIn } = useAuth();
@@ -55,6 +56,7 @@ const MyRoutes = () => {
 
                 <Route path="/roles" element={<ManageRoles />} />
                 <Route path="/permisos" element={<ManagePermissions />} />
+                <Route path="/adminUsers" element={<ManageUsers />} />
                 <Route path="/admin/users" element={<ManageUsuarios />} />
             </Route>
 

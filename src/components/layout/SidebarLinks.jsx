@@ -15,8 +15,12 @@ const SidebarLinks = () => [
         to: "/roles",
       },
       {
-        label: "Administrar permisos",
+        label: "Asignar permisos",
         to: "/permisos",
+      },
+      {
+        label: "Administrar usuarios",
+        to: "/adminUsers",
       },
     ],
   },
