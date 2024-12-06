@@ -6,28 +6,28 @@ import { useAuth } from '../../context/AuthContext';
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [nombre, setNombre] = useState('')
     const [correo, setCorreo] = useState('')
     const [contraseña, setContraseña] = useState('')
-    const [usuario, setUsuario] = useState('')
     const { login } = useAuth();
 
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await api.post("/auth/register", {
-                username: usuario,
-                password: contraseña,
+            const response = await api.post("/auth/registro/", {
                 nombre: nombre,
-                email: correo
+                email: correo,
+                password: contraseña,
+                roles: [2] 
             });
-            console.log("sdbdncc")
-            const { token } = response.data;
-            console.log('token', token);
-            localStorage.setItem('token', token);
+            const { access_token, refresh_token } = response.data;
+            //const { token } = response.data;
+            console.log('token', refresh_token);
+            localStorage.setItem('token', refresh_token);
             login();
         } catch (error) {
-            console.error('Error al registrarse:', error.response.data);
+            setErrorMessage(error.response?.data?.email || 'Error al registrarse. Inténtalo de nuevo.');
         }
     };
     return (
@@ -53,16 +53,6 @@ const Register = () => {
                             className="block w-full appearance-none bg-transparent border-none placeholder:text-gray-500 text-lg focus:outline-none focus:ring-0 peer"
                             placeholder="CORREO"
                             onChange={ev => setCorreo(ev.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="relative border-b border-blue">
-                        <input
-                            type="text"
-                            id="usuario"
-                            className="block w-full appearance-none bg-transparent border-none placeholder:text-gray-500 text-lg focus:outline-none focus:ring-0 peer"
-                            placeholder="NOMBRE DE USUARIO"
-                            onChange={ev => setUsuario(ev.target.value)}
                             required
                         />
                     </div>
@@ -99,6 +89,7 @@ const Register = () => {
                             </Link>
                         </p>
                     </div>
+                    {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
                 </form>
             </div>
         </div>

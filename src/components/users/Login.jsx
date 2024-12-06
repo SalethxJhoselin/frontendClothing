@@ -6,8 +6,8 @@ import api from '../../api/apiServices';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [usuario, setUsuario] = useState('');
-    const [contraseña, setContraseña] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const { login } = useAuth();
 
@@ -15,14 +15,13 @@ const Login = () => {
         event.preventDefault(); // Evita que el formulario se recargue
         //console.log('entreeeeeeeee');
         try {
-            /*const response = await api.post("/auth/login", {
-                username: usuario,
-                password: contraseña
-            });*/
-
-            const { token } = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5LCJpZHN1YiI6IjEyMzQiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjkyOTg2ODAwLCJleHBpcmVkX3N1YmplY3QiOiJqdW5lIiwic3ViIjoiYWRtaW4ifQ.NIXuJqFXYhgY6xpv2v9BG75Dxqkj5fD9oBcBR6z6Vd8";
-            console.log('token', token);
-            localStorage.setItem('token', token);
+            const response = await api.post("/auth/login/", {
+                email: email,
+                password: password,
+            });
+            const { access_token, refresh_token } = response.data;
+            console.log('token', refresh_token);
+            localStorage.setItem('token', refresh_token);
             login();
         } catch (error) {
             setErrorMessage('Error al iniciar sesión. Verifica tus credenciales');
@@ -41,25 +40,22 @@ const Login = () => {
                 <form className="space-y-8" onSubmit={onSubmit}>
                     <div className="relative border-b border-blue">
                         <input
-                            type="text"
-                            id="usuario"
+                            type="email"
+                            id="correo"
                             className="block w-full appearance-none bg-transparent border-none placeholder:text-gray-500 text-lg focus:outline-none focus:ring-0 peer"
-                            placeholder="USUARIO"
-                            autoComplete="off"
-                            value={usuario}
-                            onChange={e => setUsuario(e.target.value)}
+                            placeholder="CORREO"
+                            onChange={ev => setEmail(ev.target.value)}
+                            required
                         />
                     </div>
-
                     <div className="relative border-b border-blue">
                         <input
                             id="password"
                             type={showPassword ? "text" : "password"}
                             className="block w-full appearance-none bg-transparent border-none placeholder:text-gray-500 text-lg focus:outline-none focus:ring-0 peer"
                             placeholder="CONTRASEÑA"
-                            autoComplete="off"
-                            value={contraseña}
-                            onChange={e => setContraseña(e.target.value)}
+                            onChange={ev => setPassword(ev.target.value)}
+                            required
                         />
                         <button
                             type="button"
